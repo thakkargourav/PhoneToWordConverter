@@ -51,7 +51,7 @@ public class Main {
         }
 
         if (dictionary.getTotalWordCount() == 0) {
-            LOGGER.error("The dictionary file {} contains no words that can be mapped to phone number.");
+            LOGGER.error("The dictionary file contains no words that can be mapped to phone number.");
             System.exit(1);
         }
 
@@ -65,15 +65,17 @@ public class Main {
     }
 
     private static Dictionary readDictionaryFromPath(String[] args) throws IOException {
-        final Dictionary dictionary;
+        if(args.length==1){
+            LOGGER.error("Please provide a path to dictionary file if using -d param");
+            System.exit(1);
+        }
         final Path dictionaryPath = Paths.get(args[1]);
         LOGGER.info("Dictionary {} passed as arguement. Overriding default Dictionary.", dictionaryPath);
         if (!Files.isReadable(dictionaryPath)) {
             LOGGER.error("Dictionary file: {} is missing or not readable.", dictionaryPath);
             System.exit(1);
         }
-        dictionary = DictionaryReader.load(dictionaryPath);
-        return dictionary;
+        return DictionaryReader.load(dictionaryPath);
     }
 
     private static Dictionary readDefaultDictionary() throws IOException {
